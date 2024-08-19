@@ -9,7 +9,6 @@ Este proyecto personal de una aplicación sencilla en Java diseñada para realiz
 - **Copia de Seguridad:** Realiza copias de seguridad de una carpeta en macOS hacia iCloud utilizando un script Bash.
 - **Interfaz Gráfica:** Presenta una interfaz gráfica para facilitar la ejecución manual del backup.
 - **Automatización:** Puede configurarse para realizar copias de seguridad diarias utilizando cron jobs.
-- **Contenedor Docker:** La aplicación puede ejecutarse dentro de un contenedor Docker para facilitar la distribución y ejecución en distintos entornos.
 
 ## Requisitos
 
@@ -26,13 +25,13 @@ cd backup-java
 ```
 
 ### 2. Ejecutar la aplicacion
+
 Para ejecutar la aplicación directamente desde la terminal:
 `java -cp bin BackupApp`
 
 ### 3. Compilar el repositorio
 
 `javac src/BackupApp.java -d bin`
-
 
 #### Uso
 
