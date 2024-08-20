@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.File;
 
+
+//cd ~/Library/Mobile\ Documents/com~apple~CloudDocs
 public class BackupApp {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Backup a iCloud");
@@ -18,17 +20,17 @@ public class BackupApp {
 
         JButton selectFolderButton;
         // Comprobar que el icono existe.
+        String basePath = new File("").getAbsolutePath();
+        String iconPath = basePath + "/../icons/folder-open-regular.png";
 
-        File ficon = new File("/Users/k/Documents/backup/icons/folder-open-regular.png");
+        File ficon = new File(iconPath);
         if (ficon.exists()) {
-            System.out.println("El ícono fue encontrado.");
-            ImageIcon originalIcon = new ImageIcon("/Users/k/Documents/backup/icons/folder-open-regular.png");
-            // Redimensionar el icono al tamaño deseado (por ejemplo, 24x24 píxeles)
+            ImageIcon originalIcon = new ImageIcon(iconPath);
             Image scaledImage = originalIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
             ImageIcon folderIcon = new ImageIcon(scaledImage);
             selectFolderButton = new JButton(folderIcon);
         } else {
-            System.out.println("El ícono no fue encontrado.");
+            System.err.println("El ícono no fue encontrado.");
             selectFolderButton = new JButton("Seleccionar Carpeta");
         }
 
