@@ -3,10 +3,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.File;
 
-
-//cd ~/Library/Mobile\ Documents/com~apple~CloudDocs
+// cd ~/Library/Mobile\ Documents/com~apple~CloudDocs
 public class BackupApp {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Backup a iCloud");
@@ -58,7 +59,7 @@ public class BackupApp {
                 }
             }
         });
-        // Crear un botón para iniciar el backup (opcional)
+        // Crear un botón para iniciar el backup
         JButton backupButton = new JButton("Iniciar Backup");
         frame.add(backupButton, BorderLayout.SOUTH);
 
@@ -77,6 +78,45 @@ public class BackupApp {
             }
         });
 
+        // Crear un botón para testear el backup
+        JButton testButton = new JButton("Test Backup");
+        frame.add(testButton, BorderLayout.EAST);
+
+        testButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (testBackup()) {
+                    JOptionPane.showMessageDialog(null, "El test del backup se completó exitosamente.");
+                } else {
+                    JOptionPane.showMessageDialog(null, "El test del backup falló.");
+                }
+            }
+        });
         frame.setVisible(true);
+    }
+
+    public static boolean testBackup() {
+        String basePath = new File("").getAbsolutePath();
+        try {
+            // Comando para ejecutar el script bash
+            String[] command = { "/bin/bash", "-c", basePath + "/../src/bash/backup_test.sh" };
+
+            // Ejecutar el comando
+            Process process = Runtime.getRuntime().exec(command);
+
+            // Leer la salida del comando
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String result = reader.readLine();
+
+            // Verificar el resultado
+            if ("true".equals(result)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

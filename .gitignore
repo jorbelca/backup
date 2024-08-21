@@ -1,5 +1,2 @@
-src/SimpleFrame.java
 src/BackupApp.class
-src/BackupApp$1.class
-src/BackupApp$2.class
-src/SimpleFrame.java
+src/BackupApp$*.class

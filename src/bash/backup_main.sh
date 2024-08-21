@@ -3,8 +3,8 @@
 # RUTA A LA CARPETA 
 SOURCE_FOLDER="/ruta/a/la/carpeta"
 
-# RUTA A ICLOUD
-DEST_FOLDER="~/Library/Mobile\ Documents/com~apple~CloudDocs/ruta/en/iCloud"
+# RUTA A LA CARPETA ICLOUD
+DEST_FOLDER="~/Library/Mobile\ Documents/com~apple~CloudDocs"
 
 
 # COMANDO A EJECUTAR
