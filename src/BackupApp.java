@@ -7,8 +7,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.File;
 
-// cd ~/Library/Mobile\ Documents/com~apple~CloudDocs
 public class BackupApp {
+    public static String basePath = new File("").getAbsolutePath();
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("Backup a iCloud");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -21,7 +22,6 @@ public class BackupApp {
 
         JButton selectFolderButton;
         // Comprobar que el icono existe.
-        String basePath = new File("").getAbsolutePath();
         String iconPath = basePath + "/../icons/folder-open-regular.png";
 
         File ficon = new File(iconPath);
@@ -71,7 +71,12 @@ public class BackupApp {
                     // Aquí puedes iniciar el proceso de backup con la carpeta seleccionada
                     JOptionPane.showMessageDialog(frame, "Iniciando backup para: " + folderPath);
                     // Llamar al método que realiza el backup
-                    // backup(folderPath);
+                    ;
+                    if (backup(folderPath)) {
+                        JOptionPane.showMessageDialog(null, "El backup se completó exitosamente.");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "El backup falló.");
+                    }
                 } else {
                     JOptionPane.showMessageDialog(frame, "Por favor, selecciona una carpeta primero.");
                 }
@@ -96,10 +101,36 @@ public class BackupApp {
     }
 
     public static boolean testBackup() {
-        String basePath = new File("").getAbsolutePath();
+
         try {
             // Comando para ejecutar el script bash
             String[] command = { "/bin/bash", "-c", basePath + "/../src/bash/backup_test.sh" };
+
+            // Ejecutar el comando
+            Process process = Runtime.getRuntime().exec(command);
+
+            // Leer la salida del comando
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String result = reader.readLine();
+
+            // Verificar el resultado
+            if ("true".equals(result)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean backup(String folderPath) {
+
+        try {
+            // Comando para ejecutar el script bash
+            System.out.println(folderPath);
+            String[] command = { "/bin/bash", "-c", basePath + "/../src/bash/backup_main.sh", folderPath };
 
             // Ejecutar el comando
             Process process = Runtime.getRuntime().exec(command);
