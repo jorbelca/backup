@@ -129,22 +129,26 @@ public class BackupApp {
 
         try {
             // Comando para ejecutar el script bash
-            System.out.println(folderPath);
-            String[] command = { "/bin/bash", "-c", basePath + "/../src/bash/backup_main.sh", folderPath };
+            String[] command = { "/bin/bash", "-c", basePath + "/../src/bash/backup_main.sh " + folderPath };
 
             // Ejecutar el comando
             Process process = Runtime.getRuntime().exec(command);
 
             // Leer la salida del comando
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
             String result = reader.readLine();
+            System.out.println("Salida estándar: " + result);
+
+            String error = errorReader.readLine();
+            if (error != null) {
+                System.err.println("Error: " + error);
+            }
 
             // Verificar el resultado
-            if ("true".equals(result)) {
-                return true;
-            } else {
-                return false;
-            }
+            return "true".equals(result);
+
         } catch (IOException e) {
             e.printStackTrace();
             return false;
