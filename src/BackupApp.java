@@ -133,23 +133,23 @@ public class BackupApp {
 
             // Ejecutar el comando
             Process process = Runtime.getRuntime().exec(command);
-
-            // Leer la salida del comando
+            // Leer la salida estándar
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
-            String result = reader.readLine();
-            System.out.println("Salida estándar: " + result);
-
-            String error = errorReader.readLine();
-            if (error != null) {
-                System.err.println("Error: " + error);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("Salida estándar: " + line);
             }
 
-            // Verificar el resultado
-            return "true".equals(result);
+            // Leer la salida de errores
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            String errorLine;
+            while ((errorLine = errorReader.readLine()) != null) {
+                System.err.println("Error: " + errorLine);
+            }
 
-        } catch (IOException e) {
+            int exitCode = process.waitFor(); // Espera a que el proceso termine
+            return exitCode == 0; // True si el proceso terminó con éxito
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return false;
         }
