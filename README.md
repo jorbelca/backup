@@ -2,13 +2,18 @@
 
 ## Descripción
 
-Este proyecto personal de una aplicación sencilla en Java diseñada para realizar copias de seguridad de una carpeta específica en un sistema macOS hacia iCloud. La aplicación presenta una interfaz gráfica (GUI) que permite a los usuarios ejecutar el proceso de backup manualmente. Además, el proyecto incluye la posibilidad de crear un contenedor Docker para ejecutar la aplicación de forma aislada y portátil.
+Este proyecto personal de una aplicación sencilla en Java diseñada para realizar copias de seguridad de una carpeta específica en un sistema macOS en la carpeta iCloud del equipo. La aplicación presenta una interfaz gráfica (GUI) que permite a los usuarios ejecutar el proceso de backup manualmente.
+
+## Capturas
+
+![Captura de Pantalla](capturasReadme/Cap_1.png)
+![Captura de Pantalla](capturasReadme/Cap_2.png)
 
 ## Características
 
 - **Copia de Seguridad:** Realiza copias de seguridad de una carpeta en macOS hacia iCloud utilizando un script Bash.
 - **Interfaz Gráfica:** Presenta una interfaz gráfica para facilitar la ejecución manual del backup.
-- **Automatización:** Puede configurarse para realizar copias de seguridad diarias utilizando cron jobs.
+- **Automatización:** [🛠️ _En desarrollo_] Puede configurarse para realizar copias de seguridad diarias utilizando cron jobs.
 
 ## Requisitos
 

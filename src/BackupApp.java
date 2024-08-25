@@ -59,9 +59,16 @@ public class BackupApp {
                 }
             }
         });
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
         // Crear un botón para iniciar el backup
         JButton backupButton = new JButton("Iniciar Backup");
-        frame.add(backupButton, BorderLayout.SOUTH);
+        // Crear un botón para testear el backup
+        JButton testButton = new JButton("Test Backup");
+        // Añadir los dos botones al final del GUI
+        buttonPanel.add(backupButton);
+        buttonPanel.add(testButton);
+
+        frame.add(buttonPanel, BorderLayout.SOUTH);
 
         backupButton.addActionListener(new ActionListener() {
             @Override
@@ -82,10 +89,6 @@ public class BackupApp {
                 }
             }
         });
-
-        // Crear un botón para testear el backup
-        JButton testButton = new JButton("Test Backup");
-        frame.add(testButton, BorderLayout.EAST);
 
         testButton.addActionListener(new ActionListener() {
             @Override
