@@ -38,6 +38,18 @@ public class BackupApp {
         // Crear un botón para abrir el JFileChooser
         frame.add(selectFolderButton, BorderLayout.NORTH);
 
+        // Añadir el panel para los JCheckBox
+        JPanel checkBoxPanel = new JPanel();
+        checkBoxPanel.setLayout(new GridLayout(2, 1)); // 2 filas, 1 columna
+
+        JCheckBox lastThreeDaysCheckBox = new JCheckBox("Mantener los últimos 3 días");
+        JCheckBox lastWeekCheckBox = new JCheckBox("Mantener la última semana");
+
+        checkBoxPanel.add(lastThreeDaysCheckBox);
+        checkBoxPanel.add(lastWeekCheckBox);
+
+        frame.add(checkBoxPanel, BorderLayout.WEST); // Añadir el panel a la izquierda
+
         // Acción al pulsar el botón
         selectFolderButton.addActionListener(new ActionListener() {
             @Override
