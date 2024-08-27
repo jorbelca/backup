@@ -89,9 +89,12 @@ public class BackupApp {
                 if (!folderPath.isEmpty()) {
                     // Aquí puedes iniciar el proceso de backup con la carpeta seleccionada
                     JOptionPane.showMessageDialog(frame, "Iniciando backup para: " + folderPath);
+                    // Obtener el estado de los JCheckBox
+                    boolean keepLastThreeDays = lastThreeDaysCheckBox.isSelected();
+                    boolean keepLastWeek = lastWeekCheckBox.isSelected();
                     // Llamar al método que realiza el backup
                     ;
-                    if (backup(folderPath)) {
+                    if (backup(folderPath, keepLastThreeDays, keepLastWeek)) {
                         JOptionPane.showMessageDialog(null, "El backup se completó exitosamente.");
                     } else {
                         JOptionPane.showMessageDialog(null, "El backup falló.");
@@ -140,11 +143,18 @@ public class BackupApp {
         }
     }
 
-    public static boolean backup(String folderPath) {
+    public static boolean backup(String folderPath, boolean keepLastThreeDays, boolean keepLastWeek) {
 
         try {
+
+            // Convertir booleanos a strings para pasar como parámetros
+            String keepThreeDays = keepLastThreeDays ? "true" : "false";
+            String keepWeek = keepLastWeek ? "true" : "false";
+
             // Comando para ejecutar el script bash
-            String[] command = { "/bin/bash", "-c", basePath + "/../src/bash/backup_main.sh " + folderPath };
+            String[] command = { "/bin/bash", "-c", basePath + "/../src/bash/backup_main.sh " + folderPath,
+                    keepThreeDays,
+                    keepWeek };
 
             // Ejecutar el comando
             Process process = Runtime.getRuntime().exec(command);

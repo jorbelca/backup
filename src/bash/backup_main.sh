@@ -5,6 +5,10 @@ DEST_FOLDER=~/Library/Mobile\ Documents/com~apple~CloudDocs
 
 # RUTA A LA CARPETA POR PARAMETROS
 SOURCE_FOLDER=$1
+# PARAMETROS DIAS 
+KEEP_LAST_3_DAYS=$2
+KEEP_LAST_WEEK=$3
+
 
 # Asegurarse de que hay una carpeta de origen
 if [ -z "$SOURCE_FOLDER" ]; then
@@ -49,3 +53,15 @@ else
     echo "Error al copiar la carpeta."
     echo "false"
 fi
+
+
+# Lógica para eliminar backups antiguos
+if [ "$KEEP_LAST_WEEK" = "true" ]; then
+    echo "Eliminando backups más antiguos de 7 días..."
+    find "$DEST_FOLDER/_backups/" -type d -mtime +7 -exec rm -rf {} \;
+elif [ "$KEEP_LAST_3_DAYS" = "true" ]; then
+    echo "Eliminando backups más antiguos de 3 días..."
+    find "$DEST_FOLDER/_backups/" -type d -mtime +3 -exec rm -rf {} \;
+fi
+
+exit 0
