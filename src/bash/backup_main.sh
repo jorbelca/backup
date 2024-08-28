@@ -1,5 +1,9 @@
 #!/bin/bash
 
+
+# Archivo de señal para detener el script
+STOP_FILE="$HOME/Documents/backup_stop_signal"
+
 # RUTA A LA CARPETA ICLOUD
 DEST_FOLDER=~/Library/Mobile\ Documents/com~apple~CloudDocs
 

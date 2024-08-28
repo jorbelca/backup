@@ -180,3 +180,5 @@ public class BackupApp {
         }
     }
 }
+
+// FALTA EL LOOP PARA QUE SE EJECUTE EN EL BACKGROUND
