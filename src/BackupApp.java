@@ -5,10 +5,14 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.io.File;
 
 public class BackupApp {
     public static String basePath = new File("").getAbsolutePath();
+
+    private static boolean isBackupRunning = false; // Bandera para controlar el estado del backup
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Backup a iCloud");
@@ -71,14 +75,19 @@ public class BackupApp {
                 }
             }
         });
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
         // Crear un botón para iniciar el backup
         JButton backupButton = new JButton("Iniciar Backup");
+        backupButton.setForeground(Color.green);
         // Crear un botón para testear el backup
         JButton testButton = new JButton("Test Backup");
-        // Añadir los dos botones al final del GUI
+        testButton.setForeground(Color.gray);
+        JButton stopButton = new JButton("Parar Backup");
+        stopButton.setForeground(Color.red);
+        // Añadir los tres botones al final del GUI
         buttonPanel.add(backupButton);
         buttonPanel.add(testButton);
+        buttonPanel.add(stopButton);
 
         frame.add(buttonPanel, BorderLayout.SOUTH);
 
@@ -87,6 +96,7 @@ public class BackupApp {
             public void actionPerformed(ActionEvent e) {
                 String folderPath = folderPathField.getText();
                 if (!folderPath.isEmpty()) {
+                    isBackupRunning = true;
                     // Aquí puedes iniciar el proceso de backup con la carpeta seleccionada
                     JOptionPane.showMessageDialog(frame, "Iniciando backup para: " + folderPath);
                     // Obtener el estado de los JCheckBox
@@ -115,6 +125,19 @@ public class BackupApp {
                 }
             }
         });
+
+        stopButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (isBackupRunning) {
+                    stopBackup();
+                    JOptionPane.showMessageDialog(frame, "Deteniendo backup...");
+                } else {
+                    JOptionPane.showMessageDialog(frame, "No hay un backup en ejecución para detener.");
+                }
+            }
+        });
+
         frame.setVisible(true);
     }
 
@@ -179,6 +202,13 @@ public class BackupApp {
             return false;
         }
     }
-}
 
-// FALTA EL LOOP PARA QUE SE EJECUTE EN EL BACKGROUND
+    public static void stopBackup() {
+        try {
+            String stopSignalPath = basePath + "/../src/bash/stop_signal.sh";
+            Files.createFile(Paths.get(stopSignalPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
