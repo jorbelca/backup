@@ -20,7 +20,6 @@ fi
 # Verificar si se ha recibido la señal de detención
 if [ -f "$STOP_SIGNAL_PATH" ]; then
     echo "Se ha recibido la señal de detención. Terminando el proceso de backup."
-    rm "$STOP_SIGNAL_PATH"
     exit 1
 fi
 

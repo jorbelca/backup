@@ -9,8 +9,6 @@ touch "$STOP_SIGNAL_PATH"
 # Confirmar que se ha creado el archivo de señal
 if [ -f "$STOP_SIGNAL_PATH" ]; then
     echo "Señal de detención creada exitosamente."
-     # Eliminar el archivo
-     rm -rf "$STOP_SIGNAL_PATH"
 else
     echo "Error al crear la señal de detención."
 fi

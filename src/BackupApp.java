@@ -14,6 +14,8 @@ public class BackupApp {
 
     private static boolean isBackupRunning = false; // Bandera para controlar el estado del backup
 
+    private static boolean stopRequested = false;
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("Backup a iCloud");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,27 +56,22 @@ public class BackupApp {
 
         frame.add(checkBoxPanel, BorderLayout.WEST); // Añadir el panel a la izquierda
 
-        // Acción al pulsar el botón
+        // CARPETA SELECTOR
         selectFolderButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Crear el JFileChooser configurado para seleccionar directorios
                 JFileChooser folderChooser = new JFileChooser();
                 folderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 folderChooser.setDialogTitle("Selecciona la carpeta para hacer backup");
 
-                // Mostrar el diálogo y capturar la selección del usuario
                 int result = folderChooser.showOpenDialog(frame);
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File selectedFolder = folderChooser.getSelectedFile();
                     folderPathField.setText(selectedFolder.getAbsolutePath());
-                    // Aquí podrías hacer algo con la ruta seleccionada, como iniciar el backup
-                    String path = "Carpeta seleccionada: " + selectedFolder.getAbsolutePath();
-
-                    frame.add(new JLabel(path), BorderLayout.CENTER);
                 }
             }
         });
+
         JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
         // Crear un botón para iniciar el backup
         JButton backupButton = new JButton("Iniciar Backup");
@@ -97,18 +94,25 @@ public class BackupApp {
                 String folderPath = folderPathField.getText();
                 if (!folderPath.isEmpty()) {
                     isBackupRunning = true;
-                    // Aquí puedes iniciar el proceso de backup con la carpeta seleccionada
-                    JOptionPane.showMessageDialog(frame, "Iniciando backup para: " + folderPath);
-                    // Obtener el estado de los JCheckBox
-                    boolean keepLastThreeDays = lastThreeDaysCheckBox.isSelected();
-                    boolean keepLastWeek = lastWeekCheckBox.isSelected();
-                    // Llamar al método que realiza el backup
-                    ;
-                    if (backup(folderPath, keepLastThreeDays, keepLastWeek)) {
-                        JOptionPane.showMessageDialog(null, "El backup se completó exitosamente.");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "El backup falló.");
-                    }
+                    stopRequested = false;
+                    new Thread(() -> {
+                        while (isBackupRunning && !stopRequested) {
+                            boolean keepLastThreeDays = lastThreeDaysCheckBox.isSelected();
+                            boolean keepLastWeek = lastWeekCheckBox.isSelected();
+
+                            if (backup(folderPath, keepLastThreeDays, keepLastWeek)) {
+                                JOptionPane.showMessageDialog(null, "El backup se completó exitosamente.");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "El backup falló.");
+                            }
+
+                            try {
+                                Thread.sleep(86400000); // Espera 24 horas antes de la siguiente ejecución
+                            } catch (InterruptedException interruptedException) {
+                                interruptedException.printStackTrace();
+                            }
+                        }
+                    }).start();
                 } else {
                     JOptionPane.showMessageDialog(frame, "Por favor, selecciona una carpeta primero.");
                 }
@@ -153,13 +157,8 @@ public class BackupApp {
             // Leer la salida del comando
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String result = reader.readLine();
+            return "true".equals(result);
 
-            // Verificar el resultado
-            if ("true".equals(result)) {
-                return true;
-            } else {
-                return false;
-            }
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -206,7 +205,10 @@ public class BackupApp {
     public static void stopBackup() {
         try {
             String stopSignalPath = basePath + "/../src/bash/stop_signal.sh";
-            Files.createFile(Paths.get(stopSignalPath));
+            if (!Files.exists(Paths.get(stopSignalPath))) {
+                Files.createFile(Paths.get(stopSignalPath));
+            }
+            Files.deleteIfExists(Paths.get(stopSignalPath));
         } catch (IOException e) {
             e.printStackTrace();
         }
