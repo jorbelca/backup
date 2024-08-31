@@ -5,8 +5,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.io.File;
 
 public class BackupApp {
@@ -95,24 +93,20 @@ public class BackupApp {
                 if (!folderPath.isEmpty()) {
                     isBackupRunning = true;
                     stopRequested = false;
-                    new Thread(() -> {
-                        while (isBackupRunning && !stopRequested) {
-                            boolean keepLastThreeDays = lastThreeDaysCheckBox.isSelected();
-                            boolean keepLastWeek = lastWeekCheckBox.isSelected();
+                    // Iniciar el backup inmediatamente
+                    boolean keepLastThreeDays = lastThreeDaysCheckBox.isSelected();
+                    boolean keepLastWeek = lastWeekCheckBox.isSelected();
 
-                            if (backup(folderPath, keepLastThreeDays, keepLastWeek)) {
-                                JOptionPane.showMessageDialog(null, "El backup se completó exitosamente.");
-                            } else {
-                                JOptionPane.showMessageDialog(null, "El backup falló.");
-                            }
+                    if (backup(folderPath, keepLastThreeDays, keepLastWeek)) {
+                        JOptionPane.showMessageDialog(null, "El backup se completó exitosamente.");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "El backup falló.");
+                    }
 
-                            try {
-                                Thread.sleep(86400000); // Espera 24 horas antes de la siguiente ejecución
-                            } catch (InterruptedException interruptedException) {
-                                interruptedException.printStackTrace();
-                            }
-                        }
-                    }).start();
+                    // Cronjob
+                    String cronJob = "0 0 * * * /bin/bash " + basePath + "/../src/bash/backup_main.sh " + folderPath
+                            + " " + keepLastThreeDays + " " + keepLastWeek;
+                    CronManager.addCronJob(cronJob);
                 } else {
                     JOptionPane.showMessageDialog(frame, "Por favor, selecciona una carpeta primero.");
                 }
@@ -204,12 +198,18 @@ public class BackupApp {
 
     public static void stopBackup() {
         try {
-            String stopSignalPath = basePath + "/../src/bash/stop_signal.sh";
-            if (!Files.exists(Paths.get(stopSignalPath))) {
-                Files.createFile(Paths.get(stopSignalPath));
+            // Detener el backup en curso
+            stopRequested = true;
+            isBackupRunning = false;
+
+            // Usar CronManager para eliminar el cron job
+            String jobIdentifier = basePath + "/../src/bash/backup_main.sh";
+            if (CronManager.removeCronJob(jobIdentifier)) {
+                System.out.println("Cron job eliminado exitosamente.");
+            } else {
+                System.out.println("No se pudo eliminar el cron job.");
             }
-            Files.deleteIfExists(Paths.get(stopSignalPath));
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
