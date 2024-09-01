@@ -27,6 +27,10 @@ public class BackupApp {
         JButton selectFolderButton;
         // Comprobar que el icono existe.
         String iconPath = basePath + "/../icons/folder-open-regular.png";
+        String mainIconPath = basePath + "/../icons/cloud-icon.png";
+
+        ImageIcon mainicon = new ImageIcon(mainIconPath);
+        frame.setIconImage(mainicon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
         File ficon = new File(iconPath);
         if (ficon.exists()) {

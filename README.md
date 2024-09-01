@@ -8,6 +8,7 @@ Este proyecto personal de una aplicación sencilla en Java diseñada para realiz
 
 ![Captura de Pantalla](capturasReadme/Cap_1.png)
 ![Captura de Pantalla](capturasReadme/Cap_2.png)
+![Captura de Pantalla](capturasReadme/Cap_3.png)
 
 ## Características
 

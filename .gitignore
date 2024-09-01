@@ -1,2 +1,3 @@
 src/BackupApp.class
 src/BackupApp$*.class
+src/CronManager.class
