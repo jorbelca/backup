@@ -1,3 +1,5 @@
 src/BackupApp.class
 src/BackupApp$*.class
 src/CronManager.class
+/bin
+/BackupApp.jar
