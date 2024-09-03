@@ -6,15 +6,37 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class BackupApp {
-    public static String basePath = new File("").getAbsolutePath();
+    public static String environment = System.getenv("APP_ENV") == null ? "production" : "development";
+    public static String basePath = "";
 
+    static {
+        if ("development".equals(environment)) {
+            // Obtén el directorio del proyecto y sube un nivel
+
+            Path projectDir = Paths.get("").toAbsolutePath();
+
+            basePath = projectDir.toString();
+
+            // Ajusta basePath para subir un nivel (eliminando "/src")
+            int index = basePath.lastIndexOf("/src");
+            if (index != -1) {
+                basePath = basePath.substring(0, index);
+            }
+
+        } else {
+            // Usa el directorio de trabajo del usuario
+            basePath = System.getProperty("user.dir");
+        }
+    }
     private static boolean isBackupRunning = false; // Bandera para controlar el estado del backup
 
     private static boolean stopRequested = false;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         JFrame frame = new JFrame("Backup a iCloud");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 200);
@@ -25,9 +47,10 @@ public class BackupApp {
         frame.add(folderPathField, BorderLayout.CENTER);
 
         JButton selectFolderButton;
+
         // Comprobar que el icono existe.
-        String iconPath = basePath + "/../icons/folder-open-regular.png";
-        String mainIconPath = basePath + "/../icons/cloud-icon.png";
+        String iconPath = Paths.get(basePath, "icons/folder-open-regular.png").toRealPath().toString();
+        String mainIconPath = Paths.get(basePath, "icons/cloud-icon.png").toRealPath().toString();
 
         ImageIcon mainicon = new ImageIcon(mainIconPath);
         frame.setIconImage(mainicon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
@@ -108,7 +131,7 @@ public class BackupApp {
                     }
 
                     // Cronjob
-                    String cronJob = "0 0 * * * /bin/bash " + basePath + "/../src/bash/backup_main.sh " + folderPath
+                    String cronJob = "0 0 * * * /bin/bash " + basePath + "/src/bash/backup_main.sh " + folderPath
                             + " " + keepLastThreeDays + " " + keepLastWeek;
                     CronManager.addCronJob(cronJob);
                 } else {
@@ -147,7 +170,7 @@ public class BackupApp {
 
         try {
             // Comando para ejecutar el script bash
-            String[] command = { "/bin/bash", "-c", basePath + "/../src/bash/backup_test.sh" };
+            String[] command = { "/bin/bash", "-c", basePath + "/src/bash/backup_test.sh" };
 
             // Ejecutar el comando
             Process process = Runtime.getRuntime().exec(command);
@@ -172,7 +195,7 @@ public class BackupApp {
             String keepWeek = keepLastWeek ? "true" : "false";
 
             // Comando para ejecutar el script bash
-            String[] command = { "/bin/bash", "-c", basePath + "/../src/bash/backup_main.sh " + folderPath,
+            String[] command = { "/bin/bash", "-c", basePath + "/src/bash/backup_main.sh " + folderPath,
                     keepThreeDays,
                     keepWeek };
 
@@ -207,7 +230,7 @@ public class BackupApp {
             isBackupRunning = false;
 
             // Usar CronManager para eliminar el cron job
-            String jobIdentifier = basePath + "/../src/bash/backup_main.sh";
+            String jobIdentifier = basePath + "/src/bash/backup_main.sh";
             if (CronManager.removeCronJob(jobIdentifier)) {
                 System.out.println("Cron job eliminado exitosamente.");
             } else {

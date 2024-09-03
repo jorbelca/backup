@@ -37,7 +37,13 @@ Para ejecutar la aplicación directamente desde la terminal:
 
 ### 3. Compilar el repositorio
 
-`javac src/BackupApp.java -d bin`
+`javac -d bin src/BackupApp.java src/CronManager.java`
+
+`jar cfm BackupApp.jar src/MANIFEST.MF -C bin .`
+
+Ejecutar
+
+`java -jar BackupApp.jar`
 
 #### Uso
 

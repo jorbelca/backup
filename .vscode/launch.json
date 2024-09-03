@@ -1,0 +1,29 @@
+{
+  // Use IntelliSense para saber los atributos posibles.
+  // Mantenga el puntero para ver las descripciones de los existentes atributos.
+  // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Current File",
+      "request": "launch",
+      "mainClass": "${file}"
+    },
+    {
+      "type": "java",
+      "name": "BackupApp",
+      "request": "launch",
+      "mainClass": "BackupApp",
+      "projectName": "backup_30d32cf3",
+      "env": { "APP_ENV": "development" }
+    },
+    {
+      "type": "java",
+      "name": "CronManager",
+      "request": "launch",
+      "mainClass": "CronManager",
+      "projectName": "backup_30d32cf3"
+    }
+  ]
+}
