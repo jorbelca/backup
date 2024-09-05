@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -35,8 +36,14 @@ public class BackupApp {
     private static boolean isBackupRunning = false; // Bandera para controlar el estado del backup
 
     private static boolean stopRequested = false;
+    private static JFrame frame;
 
-    public static void main(String[] args) throws IOException {
+    public BackupApp() throws IOException {
+        createAndShowGUI();
+    }
+
+    private static void createAndShowGUI() throws IOException {
+
         JFrame frame = new JFrame("Backup a iCloud");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 200);
@@ -47,25 +54,28 @@ public class BackupApp {
         frame.add(folderPathField, BorderLayout.CENTER);
 
         JButton selectFolderButton;
+        try {
+            // Comprobar que el icono existe.
+            String iconPath = Paths.get(basePath, "icons/folder-open-regular.png").toRealPath().toString();
+            String mainIconPath = Paths.get(basePath, "icons/cloud-icon.png").toRealPath().toString();
 
-        // Comprobar que el icono existe.
-        String iconPath = Paths.get(basePath, "icons/folder-open-regular.png").toRealPath().toString();
-        String mainIconPath = Paths.get(basePath, "icons/cloud-icon.png").toRealPath().toString();
+            ImageIcon mainicon = new ImageIcon(mainIconPath);
+            frame.setIconImage(mainicon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        ImageIcon mainicon = new ImageIcon(mainIconPath);
-        frame.setIconImage(mainicon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
-
-        File ficon = new File(iconPath);
-        if (ficon.exists()) {
-            ImageIcon originalIcon = new ImageIcon(iconPath);
-            Image scaledImage = originalIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
-            ImageIcon folderIcon = new ImageIcon(scaledImage);
-            selectFolderButton = new JButton(folderIcon);
-        } else {
-            System.err.println("El ícono no fue encontrado.");
+            File ficon = new File(iconPath);
+            if (ficon.exists()) {
+                ImageIcon originalIcon = new ImageIcon(iconPath);
+                Image scaledImage = originalIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+                ImageIcon folderIcon = new ImageIcon(scaledImage);
+                selectFolderButton = new JButton(folderIcon);
+            } else {
+                System.err.println("El ícono no fue encontrado.");
+                selectFolderButton = new JButton("Seleccionar Carpeta");
+            }
+        } catch (IOException e) {
+            System.err.println("Error al cargar los íconos: " + e.getMessage());
             selectFolderButton = new JButton("Seleccionar Carpeta");
         }
-
         // Crear un botón para abrir el JFileChooser
         frame.add(selectFolderButton, BorderLayout.NORTH);
 
@@ -164,6 +174,20 @@ public class BackupApp {
         });
 
         frame.setVisible(true);
+    }
+
+    public static JFrame getFrame() {
+        return frame;
+    }
+
+    public static void main(String[] args) throws IOException {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                createAndShowGUI(); // Método para crear la interfaz gráfica
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public static boolean testBackup() {
