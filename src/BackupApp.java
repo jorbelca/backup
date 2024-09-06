@@ -11,10 +11,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class BackupApp {
-    public static String environment = System.getenv("APP_ENV") == null ? "production" : "development";
+    public static String environment = System.getenv().getOrDefault("APP_ENV", "production");
     public static String basePath = "";
 
     static {
+
         if ("development".equals(environment)) {
             // Obtén el directorio del proyecto y sube un nivel
 
@@ -43,7 +44,6 @@ public class BackupApp {
     }
 
     private static void createAndShowGUI() throws IOException {
-
         JFrame frame = new JFrame("Backup a iCloud");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 200);

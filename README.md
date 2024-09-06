@@ -53,6 +53,8 @@ La aplicación presenta una sencilla interfaz gráfica donde puedes ejecutar man
 
 El script de backup se encuentra en el directorio scripts/backup.sh. Puedes modificarlo para especificar la carpeta de origen y la ruta en iCloud donde se guardará la copia.
 
+\*Para que los paths de los archivos funcionen correctamente, establecer el APP_ENV (`export APP_ENV="development"`)
+
 #### Contribuciones
 
 Las contribuciones son bienvenidas. Si encuentras algún problema o tienes ideas para mejorar la aplicación, por favor abre un issue o envía un pull request.

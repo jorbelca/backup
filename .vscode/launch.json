@@ -15,8 +15,7 @@
       "name": "BackupApp",
       "request": "launch",
       "mainClass": "BackupApp",
-      "projectName": "backup_30d32cf3",
-      "env": { "APP_ENV": "development" }
+      "projectName": "backup_30d32cf3"
     },
     {
       "type": "java",
