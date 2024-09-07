@@ -5,5 +5,5 @@ src/CronManager.class
 /BackupApp.jar
 .vscode
 BackupApp.app
-src/GuiTest_*
+src/GuiTest_BackupApp.class
 src/tempCodeRunnerFile

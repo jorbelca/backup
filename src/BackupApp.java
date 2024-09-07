@@ -10,6 +10,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+//ESTABLECER EL MODO DESARROLLO = export APP_ENV="development"
 public class BackupApp {
     public static String environment = System.getenv().getOrDefault("APP_ENV", "production");
     public static String basePath = "";
@@ -44,7 +45,7 @@ public class BackupApp {
     }
 
     private static void createAndShowGUI() throws IOException {
-        JFrame frame = new JFrame("Backup a iCloud");
+        frame = new JFrame("Backup a iCloud");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 200);
         frame.setLayout(new BorderLayout());
